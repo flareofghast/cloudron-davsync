@@ -1,0 +1,20 @@
+{
+  "name": "cloudron-davsync",
+  "version": "1.0.0",
+  "description": "Sync card- and caldav contents between Cloudron apps",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "main": "./davsync.js",
+  "bin": {
+    "cloudron-davsync": "./davsync.js"
+  },
+  "author": "Cloudron",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.6.1",
+    "commander": "^2.19.0",
+    "progress": "^2.0.1",
+    "webdav": "^1.6.1"
+  }
+}
