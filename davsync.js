@@ -66,7 +66,7 @@ function sync(options) {
                     if (error) return callback(error);
 
                     putFile(dstClient, srcContent.filename, srcData, function (error, result) {
-                        if (error && error.message.indexOf('415') !== -1) invalidContents.push({ content: srcContent, data: srcData.toString() });
+                        if (error && (error.status === 415 || error.status === 400)) invalidContents.push({ content: srcContent, data: srcData.toString() });
                         else if (error) failedContents.push({ content: srcContent, data: srcData.toString(), errorMessage: error.message });
 
                         bar.tick();
