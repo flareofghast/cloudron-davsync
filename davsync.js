@@ -121,7 +121,29 @@ function verify(options) {
         // empty resources are ok
         if(items.length === 0) return console.log('Successfully verified');
 
-        getFile(client, items[0].filename, function (error, data) {
+        if (!options.details) {
+            return getFile(client, items[0].filename, function (error, data) {
+                if (error) return handleError('Unable to get first item on source server.', error);
+                console.log('Successfully verified');
+            });
+        }
+
+        async.each(items, function (item, callback) {
+            getFile(client, item.filename, function (error, data) {
+                if (error) return callback(error);
+                console.log('=> Entry', item.filename);
+
+                var indent = 1;
+                var lines = data.toString().split('\n');
+                lines.forEach(function (line) {
+                    if (line.indexOf('END:') === 0) indent -= 2;
+                    console.log(Array(indent).join(' ') + line);
+                    if (line.indexOf('BEGIN:') === 0) indent += 2;
+                });
+                console.log();
+                callback();
+            });
+        }, function (error) {
             if (error) return handleError('Unable to get first item on source server.', error);
             console.log('Successfully verified');
         });
@@ -140,6 +162,7 @@ commander.command('sync')
 
 commander.command('verify')
     .description('Verify DAV source')
+    .option('--details', 'Dump data of all entries')
     .option('--source <url>', 'Source - full DAV URL to addressbook or calendar')
     .option('--source-username <username>', 'Source username')
     .option('--source-password <password>', 'Source password')
