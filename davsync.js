@@ -3,7 +3,7 @@
 var async = require('async'),
     commander = require('commander'),
     ProgressBar = require('progress'),
-    webdav = require('webdav');
+    { createClient } = require("webdav");
 
 function getContents(client, callback) {
     client.getDirectoryContents('/').then(function (result) {
@@ -44,8 +44,8 @@ function sync(options) {
         !options.destinationPassword
     ) return options.help();
 
-    var srcClient = webdav(options.source, options.sourceUsername, options.sourcePassword);
-    var dstClient = webdav(options.destination, options.destinationUsername, options.destinationPassword);
+    var srcClient = createClient(options.source, { username: options.sourceUsername, password: options.sourcePassword });
+    var dstClient = createClient(options.destination, { username: options.destinationUsername, password: options.destinationPassword });
 
     var failedContents = [];
     var invalidContents = [];
@@ -96,7 +96,7 @@ function sync(options) {
                     });
                 }
 
-                console.log(`Done. ${failedContents.length} failed. ${invalidContents.length} invalid.`);
+                console.log(`Done.\n${failedContents.length} failed. ${invalidContents.length} invalid.`);
 
                 process.exit((failedContents.length || invalidContents.length) ? 1 : 0);
             });
@@ -111,7 +111,7 @@ function verify(options) {
         !options.sourcePassword
     ) return options.help();
 
-    var client = webdav(options.source, options.sourceUsername, options.sourcePassword);
+    var client = createClient(options.source, { username: options.sourceUsername, password: options.sourcePassword });
 
     getContents(client, function (error, items) {
         if (error) return handleError('Unable to list items on source server.', error);
