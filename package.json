@@ -12,7 +12,7 @@
   "readme": "README.md",
   "repository": {
     "type": "git",
-    "url": "https://git.cloudron.io/cloudron/cloudron-davsync.git"
+    "url": "https://github.com/flareofghast/cloudron-davsync.git"
   },
   "author": "Cloudron",
   "license": "MIT",
